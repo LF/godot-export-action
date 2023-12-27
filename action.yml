@@ -5,9 +5,12 @@ inputs:
   debug:
     type: boolean
     default: false
-  path:
+  output:
     type: string
     required: true
+  path:
+    type: string
+    default: "."
   target:
     type: string
     required: true
@@ -15,14 +18,14 @@ inputs:
 runs:
   using: composite
   steps:
-  - run: mkdir -v -p $(dirname "${{ inputs.path }}")
+  - run: mkdir -v -p $(dirname "${{ inputs.output }}")
     shell: bash
   - id: get-godot-version
     run: echo "godot-version=$(godot --version)" >> $GITHUB_OUTPUT
     shell: bash
   - if: ${{ startsWith(steps.get-godot-version.outputs.godot-version, '4') }}
-    run: godot -v --headless ${{ inputs.debug && '--export-debug' || '--export-release' }} "${{ inputs.target }}" "${{ inputs.path }}"
+    run: godot -v --headless --path "${{ inputs.path }}" ${{ inputs.debug && '--export-debug' || '--export-release' }} "${{ inputs.target }}" "${{ inputs.output }}"
     shell: bash
   - if: ${{ startsWith(steps.get-godot-version.outputs.godot-version, '3') }}
-    run: godot -v ${{ inputs.debug && '--export-debug' || '--export' }} "${{ inputs.target }}" "${{ inputs.path }}"
+    run: godot -v --path "${{ inputs.path }}" ${{ inputs.debug && '--export-debug' || '--export' }} "${{ inputs.target }}" "${{ inputs.output }}"
     shell: bash
