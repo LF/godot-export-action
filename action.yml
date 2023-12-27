@@ -2,6 +2,9 @@ name: Godot export action
 descripton: Exports a Godot project
 
 inputs:
+  debug:
+    type: boolean
+    default: false
   path:
     type: string
     required: true
@@ -14,5 +17,5 @@ runs:
   steps:
   - run: mkdir -v -p $(dirname "${{ inputs.path }}")
     shell: bash
-  - run: godot -v --export "${{ inputs.target }}" "${{ inputs.path }}"
+  - run: godot -v ${{ inputs.debug && '--export-debug' || '--export' }} "${{ inputs.target }}" "${{ inputs.path }}"
     shell: bash
