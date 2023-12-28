@@ -3,16 +3,12 @@ descripton: Exports a Godot project
 
 inputs:
   debug:
-    type: boolean
     default: false
   output:
-    type: string
     required: true
   path:
-    type: string
     default: "."
   target:
-    type: string
     required: true
 
 runs:
@@ -24,8 +20,8 @@ runs:
     run: echo "godot-version=$(godot --version)" >> $GITHUB_OUTPUT
     shell: bash
   - if: ${{ startsWith(steps.get-godot-version.outputs.godot-version, '4') }}
-    run: godot -v --headless --path "${{ inputs.path }}" ${{ inputs.debug && '--export-debug' || '--export-release' }} "${{ inputs.target }}" "${{ inputs.output }}"
+    run: godot -v --headless --path "${{ inputs.path }}" ${{ inputs.debug == 'true' && '--export-debug' || '--export-release' }} "${{ inputs.target }}" "${{ inputs.output }}"
     shell: bash
   - if: ${{ startsWith(steps.get-godot-version.outputs.godot-version, '3') }}
-    run: godot -v --path "${{ inputs.path }}" ${{ inputs.debug && '--export-debug' || '--export' }} "${{ inputs.target }}" "${{ inputs.output }}"
+    run: godot -v --path "${{ inputs.path }}" ${{ inputs.debug == 'true' && '--export-debug' || '--export' }} "${{ inputs.target }}" "${{ inputs.output }}"
     shell: bash
